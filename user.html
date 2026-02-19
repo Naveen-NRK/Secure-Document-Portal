@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. MCET College - Document Portal</title>
+    <link rel="stylesheet" href="user-styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>Dr. MCET College</h1>
+                <p>Secure Document Portal</p>
+            </div>
+            <nav class="nav">
+                <a href="#home">Home</a>
+                <a href="#files">Files</a>
+                <a href="#about">About</a>
+                <div id="userSession" class="user-session" style="display: none;">
+                    <span id="sessionUserName"></span>
+                    <button class="logout-btn" onclick=
+                    
+                    "userLogout()">Logout</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Secure Document Access Portal</h2>
+            <p>Access important files and documents with verified authentication</p>
+        </div>
+    </section>
+
+    <!-- Session Info Banner -->
+    <div id="sessionBanner" class="session-banner" style="display: none;">
+        <div class="container">
+            <div class="session-info">
+                <span class="session-icon"></span>
+                <div class="session-text">
+                    <strong>Active Session</strong>
+                    <p>You can view all files without re-authentication until you logout or system sleeps</p>
+                </div>
+                <button class="end-session-btn" onclick="userLogout()">End Session</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filter -->
+    <section class="filter-section" id="files">
+        <div class="container">
+            <h2>Available Files & Documents</h2>
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">
+                    All Files
+                </button>
+                <button class="filter-btn" data-category="circulars" onclick="filterByCategory('circulars')">
+                    Circulars
+                </button>
+                <button class="filter-btn" data-category="notices" onclick="filterByCategory('notices')">
+                    Notices
+                </button>
+                <button class="filter-btn" data-category="results" onclick="filterByCategory('results')">
+                    Results
+                </button>
+                <button class="filter-btn" data-category="timetables" onclick="filterByCategory('timetables')">
+                    Timetables
+                </button>
+                <button class="filter-btn" data-category="announcements" onclick="filterByCategory('announcements')">
+                    Announcements
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Files Grid -->
+    <section class="files-section">
+        <div class="container">
+            <div id="filesGrid" class="files-grid">
+                <!-- Files will be loaded dynamically -->
+            </div>
+            
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon"></div>
+                <h3>No files available</h3>
+                <p>Please check back later for new documents</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Authentication Modal (First Time or After Logout) -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h2>Verify Your Identity</h2>
+            <p class="modal-subtitle">Please authenticate to access the document</p>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="userName">Full Name *</label>
+                    <input type="text" id="userName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="userMobile">+91 Mobile Number *</label>
+                    <input type="tel" id="userMobile" required placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span> Send OTP</span>
+                </button>
+            </form>
+
+            <div class="security-notice">
+                Your information is secure and will be used only for authentication
+            </div>
+        </div>
+    </div>
+
+    <!-- OTP Verification Modal -->
+    <div id="otpModal" class="modal">
+        <div class="modal-content">
+            <h2>Enter OTP</h2>
+            <p class="modal-subtitle" id="otpMessage">OTP has been sent to your mobile number</p>
+            
+            <form id="otpForm">
+                <div class="form-group">
+                    <label>Enter 6-digit OTP *</label>
+                    <div class="otp-input-container">
+                        <input type="text" class="otp-input" maxlength="1" id="otp1">
+                        <input type="text" class="otp-input" maxlength="1" id="otp2">
+                        <input type="text" class="otp-input" maxlength="1" id="otp3">
+                        <input type="text" class="otp-input" maxlength="1" id="otp4">
+                        <input type="text" class="otp-input" maxlength="1" id="otp5">
+                        <input type="text" class="otp-input" maxlength="1" id="otp6">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span>Verify OTP</span>
+                </button>
+                <button type="button" class="resend-btn" onclick="resendOtp()">
+                    Resend OTP
+                </button>
+            </form>
+
+            <div class="timer-display" id="otpTimer">
+                Valid for: <span id="timerCount">05:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div id="viewerModal" class="modal">
+        <div class="modal-content viewer-content">
+            <span class="close" onclick="closeViewer()">&times;</span>
+            <div class="viewer-header">
+                <h2 id="documentTitle"></h2>
+                <div class="viewer-actions">
+                    <span id="viewerDownloadStatus" class="no-download-notice">Download Disabled</span>
+                    <button class="close-viewer-btn" onclick="closeViewer()">Close</button>
+                </div>
+            </div>
+            
+            <div class="screenshot-protection-layer"></div>
+            <div id="documentContent" class="document-content">
+                <!-- Document content will be loaded here -->
+            </div>
+            
+            <div class="watermark">
+                <div id="userWatermark"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Dr. MCET College. All rights reserved.</p>
+            <p>User Document Portal | Protected by Advanced Authentication</p>
+        </div>
+    </footer>
+
+    <!-- Session Expiry Warning -->
+    <div id="sessionWarning" class="session-warning" style="display: none;">
+        <div class="warning-content">
+            <h3>Session About to Expire</h3>
+            <p>Your session will expire in <span id="warningTimer">60</span> seconds due to inactivity</p>
+            <div class="warning-actions">
+                <button class="continue-btn" onclick="extendSession()">Continue Session</button>
+                <button class="logout-warning-btn" onclick="userLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="user-script.js"></script>
+</body>
+</html>

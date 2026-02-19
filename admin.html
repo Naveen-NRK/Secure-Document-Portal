@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. MCET College - Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>html { scroll-behavior: smooth; }</style>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Top Info Bar -->
+        <div class="admin-topbar">
+            <div class="admin-topbar-inner">
+                <span class="topbar-contact">Admin Portal</span>
+                <a href="user.html" class="topbar-portal">User Portal</a>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <a href="admin.html" class="admin-logo-link">
+                    <img src="assets/mcet-logo.png" alt="Dr. MCET College" class="admin-logo">
+                    <div class="admin-logo-text">
+                        <span class="logo-sub">DR. MAHALINGAM COLLEGE OF ENGINEERING AND TECHNOLOGY</span>
+                        <span class="logo-tagline">Admin Document Management</span>
+                    </div>
+                </a>
+                <div class="header-right">
+                    <div class="admin-info">
+                        <span id="adminName" class="admin-name">Admin User</span>
+                        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Navigation -->
+        <nav class="admin-nav">
+            <a href="#dashboard" class="nav-link">Dashboard</a>
+            <a href="#upload" class="nav-link">Upload</a>
+            <a href="#files" class="nav-link">Files</a>
+            <a href="#logs" class="nav-link">Activity Logs</a>
+        </nav>
+
+        <!-- Hero Banner -->
+        <section class="admin-hero">
+            <div class="admin-hero-content">
+                <h1>Document Management</h1>
+                <p>Home / Admin Portal</p>
+                <a href="#upload" class="hero-cta">Upload File</a>
+            </div>
+        </section>
+
+        <!-- Stats Dashboard -->
+        <section id="dashboard" class="stats-section">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3 id="totalFiles">0</h3>
+                    <p>Total Files</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3 id="totalUsers">0</h3>
+                    <p>Total Users</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3 id="totalViews">0</h3>
+                    <p>Total Views</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <h3 id="blockedAttempts">0</h3>
+                    <p>Blocked Attempts</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- View Duration Analytics Dashboard -->
+        <section id="analytics" class="analytics-section">
+            <h2>View Duration Analytics</h2>
+            <p class="analytics-subtitle">Average time users spend viewing each file</p>
+            <div id="viewDurationChart" class="view-duration-chart">
+                <!-- Chart rendered by JS -->
+            </div>
+            <div id="viewDurationEmpty" class="chart-empty-state" style="display: none;">
+                <div class="empty-icon"></div>
+                <p>No view duration data yet. Data appears when users close a file after viewing.</p>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section id="upload" class="upload-section">
+            <h2>Upload New File</h2>
+            <form id="uploadForm" class="upload-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fileTitle">File Title *</label>
+                        <input type="text" id="fileTitle" required placeholder="e.g., Examination Schedule 2026">
+                    </div>
+                    <div class="form-group">
+                        <label for="fileCategory">Category *</label>
+                        <select id="fileCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="circulars">Circulars</option>
+                            <option value="notices">Notices</option>
+                            <option value="results">Results</option>
+                            <option value="timetables">Timetables</option>
+                            <option value="announcements">Announcements</option>
+                            <option value="documents">Documents</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileUpload">Upload File *</label>
+                    <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.xls,.xlsx,.mp4,.webm,.ogg,.jpg,.jpeg,.png,.gif,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,video/mp4,video/webm,video/ogg,image/jpeg,image/png,image/gif,image/webp" required>
+                    <small>PDF, Word, Excel, Video (mp4/webm/ogg), Images (jpg/png/gif/webp). Max 25MB.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="fileDescription">Description (optional)</label>
+                    <textarea id="fileDescription" placeholder="Brief description of the file..." rows="2"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="publishDate">Publish Date *</label>
+                        <input type="date" id="publishDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileStatus">Status *</label>
+                        <select id="fileStatus" required>
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-inline">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="allowDownload" checked>
+                            <span>Allow user to download</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="upload-btn">
+                    <span>Upload File</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Files List -->
+        <section id="files" class="files-section">
+            <div class="section-header">
+                <h2>Uploaded Files</h2>
+                <div class="filter-group">
+                    <select id="filterCategory" onchange="filterFiles()">
+                        <option value="all">All Categories</option>
+                        <option value="circulars">Circulars</option>
+                        <option value="notices">Notices</option>
+                        <option value="results">Results</option>
+                        <option value="timetables">Timetables</option>
+                        <option value="announcements">Announcements</option>
+                        <option value="documents">Documents</option>
+                    </select>
+                    <select id="filterStatus" onchange="filterFiles()">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="draft">Draft</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="filesList" class="files-list">
+                <!-- Files will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Activity Logs (Separated) -->
+        <section id="logs" class="logs-section">
+            <div class="section-header">
+                <h2>Activity Logs</h2>
+                <div style="display:flex;gap:10px;align-items:center;">
+                    <label for="sessionFilter" style="color:#333;font-weight:600;margin-right:6px;">Session:</label>
+                    <select id="sessionFilter" onchange="renderActivityLogs()" style="padding:8px;border-radius:6px;border:1px solid #ddd;background:white;">
+                        <option value="all">All Sessions</option>
+                    </select>
+                    <button class="export-btn" onclick="exportLogs()">Export Logs</button>
+                    <button class="export-btn" style="background:#dc3545;margin-left:6px;" onclick="openClearLogsModal()">Clear Logs</button>
+                </div>
+            </div>
+
+            <div class="logs-blocks">
+                <div class="logs-block admin-logs-block">
+                    <h3>Admin Actions</h3>
+                    <div class="logs-table-container">
+                        <table class="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Action</th>
+                                    <th>File</th>
+                                    <th>Reason</th>
+                                    <th>Session</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLogsBody">
+                                <!-- Admin logs will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="logs-block user-logs-block">
+                    <h3>User Logins</h3>
+                    <p class="logs-hint">Click a row to view that user's session activity</p>
+                    <div class="logs-table-container">
+                        <table class="logs-table user-logins-table">
+                            <thead>
+                                <tr>
+                                    <th>Login Time</th>
+                                    <th>User Name</th>
+                                    <th>Mobile</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userLogsBody">
+                                <!-- User login rows - click to view session activity -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <span class="close" onclick="closeSuccessModal()">&times;</span>
+            <div class="success-icon"></div>
+            <h2>Success!</h2>
+            <p id="successMessage"></p>
+            <button class="ok-btn" onclick="closeSuccessModal()">OK</button>
+        </div>
+    </div>
+
+        <!-- Clear Logs Modal -->
+        <div id="clearLogsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeClearLogsModal()">&times;</span>
+                <h2>Clear Activity Logs</h2>
+                <form id="clearLogsForm">
+                    <div class="form-group">
+                        <label>Clear Target</label>
+                        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;">
+                            <label><input type="radio" name="clearTarget" value="all" checked> All Logs</label>
+                            <label><input type="radio" name="clearTarget" value="admin"> Admin Logs</label>
+                            <label><input type="radio" name="clearTarget" value="user"> User Logs</label>
+                        </div>
+                    </div>
+
+                    <div id="clearUserOptions" style="display:none;">
+                        <div class="form-group">
+                            <label for="clearSessionSelect">Filter by Session (optional)</label>
+                            <select id="clearSessionSelect">
+                                <option value="all">All Sessions</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="clearUserMatch">Filter by User Name or Mobile (optional)</label>
+                            <input type="text" id="clearUserMatch" placeholder="e.g., John Doe or 9876543210">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="clearReason">Reason for clearing logs *</label>
+                        <textarea id="clearReason" required rows="3" placeholder="Describe why logs are being cleared..."></textarea>
+                    </div>
+
+                    <div style="display:flex;gap:10px;">
+                        <button type="submit" class="ok-btn">Confirm Clear</button>
+                        <button type="button" class="save-btn" onclick="closeClearLogsModal()" style="background:#6c757d;">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    <!-- User Session Detail Modal -->
+    <div id="userSessionModal" class="modal">
+        <div class="modal-content session-detail-modal">
+            <span class="close" onclick="closeUserSessionModal()">&times;</span>
+            <h2>User Session Activity</h2>
+            <div id="sessionDetailHeader" class="session-detail-header">
+                <!-- User, Mobile, IP, Login time -->
+            </div>
+            <div class="session-detail-list">
+                <h4>Activity Timeline</h4>
+                <ul id="sessionDetailList">
+                    <!-- Activities for this session -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit File Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content edit-modal">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit File</h2>
+            <form id="editForm">
+                <input type="hidden" id="editFileId">
+                <div class="form-group">
+                    <label for="editTitle">File Title</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required>
+                        <option value="circulars">Circulars</option>
+                        <option value="notices">Notices</option>
+                        <option value="results">Results</option>
+                        <option value="timetables">Timetables</option>
+                        <option value="announcements">Announcements</option>
+                        <option value="documents">Documents</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription" required rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editFileUpload">Replace File (optional)</label>
+                    <input type="file" id="editFileUpload" accept=".pdf,.doc,.docx,.xls,.xlsx,.mp4,.webm,.ogg,.jpg,.jpeg,.png,.gif,.webp,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,video/mp4,video/webm,video/ogg,image/jpeg,image/png,image/gif,image/webp">
+                    <small>Leave empty to keep existing file. Max 25MB.</small>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" required>
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-group-inline">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="editAllowDownload">
+                            <span>Allow user to download</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="save-btn">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
