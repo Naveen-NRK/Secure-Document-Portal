@@ -62,3 +62,6 @@ It helps admins know who accessed documents, when they accessed them, and what a
 
 *Author*
 Naveen R
+
+
+Important: do **not** put your real `.env` values in the README. Only use placeholders like above.
